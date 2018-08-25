@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import e.apple.starwartest.R;
 import e.apple.starwartest.constant.Constant;
@@ -33,6 +34,8 @@ public class CustomDialog extends Dialog
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.alert);
         Button btnNo = (Button) findViewById(R.id.btnNo);
+
+
         btnNo.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -51,6 +54,9 @@ public class CustomDialog extends Dialog
                 dialogClickListneristener.onButtonClick(Constant.YES);
             }
         });
+        TextView alertMsg = (TextView) findViewById(R.id.alertMsg);
+        TextView alertTitle = (TextView) findViewById(R.id.alertTitle);
+
 
     }
 

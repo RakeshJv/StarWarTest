@@ -10,20 +10,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.List;
 
 import e.apple.starwartest.R;
-import e.apple.starwartest.adapter.CharacterList;
+import e.apple.starwartest.adapter.CharacterListAdapter;
+import e.apple.starwartest.interfaces.ItemClickListener;
 import e.apple.starwartest.model.Character;
 
-public class CharacterFragment extends Fragment {
+
+public class CharacterFragment extends Fragment implements ItemClickListener {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView characterList;
     private View view;
     List<Character> items;
+    CharacterListAdapter characterListAdapter;
+    RecyclerView recyclerView;
     public CharacterFragment() {
 
     }
@@ -41,8 +46,7 @@ public class CharacterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("", "");
-        if (getArguments() != null)
-        {
+        if (getArguments() != null) {
             this.items = (List<Character>) getArguments().getSerializable("data");
 
         }
@@ -50,21 +54,19 @@ public class CharacterFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
 
         view = inflater.inflate(R.layout.fragment_character, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.characterList);
-        recyclerView.setAdapter(new CharacterList(items, R.layout.character_list));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = (RecyclerView) view.findViewById(R.id.characterList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        characterListAdapter = new CharacterListAdapter(items, R.layout.character_list);
+        characterListAdapter.setClickListener(this);
+        recyclerView.setAdapter(characterListAdapter);
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -83,8 +85,20 @@ public class CharacterFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
+    @Override
+    public void onClick(View view, int position)
+    {
+        Character character = items.get(position);
+        Toast.makeText( getActivity(),"position--"+position,Toast.LENGTH_LONG).show();
+
+        if (mListener != null) {
+            mListener.onFragmentInteraction(character);
+        }
+    }
+
+    public interface OnFragmentInteractionListener
+    {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction( Character character);
     }
 }

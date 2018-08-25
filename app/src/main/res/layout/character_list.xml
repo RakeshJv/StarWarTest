@@ -3,14 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:padding="3dp">
 
-
-    <TextView
-        android:id="@+id/characterNames"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/listItemText"
+        android:layout_height="wrap_content"
+        android:background="@color/background">
 
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/characterNames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="test"
+                android:textColor="@color/listItemText"
+                android:textSize="20dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>

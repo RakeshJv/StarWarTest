@@ -1,52 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="10dp"
-    android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/btnYes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="YES"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnNo"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnNo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnYes"
-        tools:layout_editor_absoluteY="465dp"
-        tools:ignore="MissingConstraints" />
+    >
 
     <TextView
         android:id="@+id/alertTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="50dp" />
+        android:gravity="left"
+        android:textColor="#000"
+        android:text="@string/alertTitle"
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/alertMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="12dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="80dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/btnYes"
-        app:layout_constraintTop_toBottomOf="@+id/alertTitle"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="50dp" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="#000"
+        android:text="@string/alertMsg"
+        android:textSize="18dp" />
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnYes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:gravity="center"
+            android:text="@string/tryAgain"
+            android:textColor="@color/listItemText"
+            android:textSize="@dimen/textSize"
+            android:layout_marginLeft="1dp"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintRight_toRightOf="parent"
+
+            />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <Button
+            android:id="@+id/btnNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:text="@string/no"
+            android:textColor="@color/listItemText"
+            android:textSize="@dimen/textSize"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/guideline" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
