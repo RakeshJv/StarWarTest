@@ -2,36 +2,40 @@ package e.apple.starwartest.activity;
 
 import android.app.ProgressDialog;
 import android.net.Uri;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.util.List;
 
 import e.apple.starwartest.R;
+import e.apple.starwartest.adapter.CharacterListAdapter;
 import e.apple.starwartest.constant.Constant;
 import e.apple.starwartest.customview.CustomDialog;
-import e.apple.starwartest.fragment.CharacterFragment;
 import e.apple.starwartest.fragment.CharacterProfileFragmnt;
 import e.apple.starwartest.interfaces.DialogClickListner;
+import e.apple.starwartest.interfaces.ItemClickListener;
 import e.apple.starwartest.model.Character;
 import e.apple.starwartest.model.Responce;
 import e.apple.starwartest.network.ApiService;
 import retrofit2.Callback;
 
 public class MainActivity extends BaseActivity implements
-        CharacterFragment.OnFragmentInteractionListener, DialogClickListner, CharacterProfileFragmnt.OnFragmentInteractionListener {
+        ItemClickListener, DialogClickListner, CharacterProfileFragmnt.OnFragmentInteractionListener {
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private CustomDialog customDialog;
     ProgressDialog progress;
+    private CharacterListAdapter characterListAdapter;
+    private RecyclerView recyclerView;
+    private List<Character> characterList;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,22 +44,32 @@ public class MainActivity extends BaseActivity implements
         customDialog = new CustomDialog(this, this);
         init();
         getDataInRetrofit();
-
     }
 
     void init() {
-        manager = getSupportFragmentManager();
-        transaction = manager.beginTransaction();
+        recyclerView = (RecyclerView) findViewById(R.id.characterList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
     }
 
 
     void setDataInFragment(List<Character> list) {
-        CharacterFragment characterFragment = CharacterFragment.newInstance(list);
-        transaction = manager.beginTransaction();
-        transaction.add(R.id.frames, characterFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        characterList = list;
+
+        characterListAdapter = new CharacterListAdapter(list, R.layout.character_list);
+        characterListAdapter.setClickListener(this);
+        recyclerView.setAdapter(characterListAdapter);
+
     }
+
+//
+//    void setDataInFragment(List<Character> list) {
+//        CharacterFragment characterFragment = CharacterFragment.newInstance(list);
+//        transaction = manager.beginTransaction();
+//        transaction.add(R.id.frames, characterFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     public void getDataInRetrofit() {
         showProgressBar();
@@ -69,7 +83,15 @@ public class MainActivity extends BaseActivity implements
                         Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show();
                         Log.d("", "Success--->" + severResponce.getResults().size());
                         progress.dismiss();
-                        setDataInFragment(severResponce.getResults());
+                        characterList = severResponce.getResults();
+                        if (characterList.isEmpty())
+                        {
+                            Toast.makeText(MainActivity.this, "Data Not Available", Toast.LENGTH_LONG).show();
+
+                        } else {
+                            setDataInFragment(characterList);
+
+                        }
                     } catch (
                             Exception e) {
                         e.printStackTrace();
@@ -105,15 +127,17 @@ public class MainActivity extends BaseActivity implements
 
     }
 
-    @Override
-    public void onFragmentInteraction(Character character) {
-        backArrowInvisible(true);
-        CharacterProfileFragmnt characterFragment = CharacterProfileFragmnt.newInstance(character);
-        transaction = manager.beginTransaction();
-        transaction.replace(R.id.frames, characterFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+//
+//    @Override
+//    public void onFragmentInteraction(Character character) {
+//        backArrowInvisible(true);
+//        CharacterProfileFragmnt characterFragment = CharacterProfileFragmnt.newInstance(character);
+//        manager = getSupportFragmentManager();
+//        transaction = manager.beginTransaction();
+//        transaction.add(R.id.frames, characterFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -134,6 +158,7 @@ public class MainActivity extends BaseActivity implements
 
         if (manager.getBackStackEntryCount() > 0) {
             Log.i("MainActivity", "popping backstack");
+            recyclerView.setVisibility(View.VISIBLE);
             backArrowInvisible(false);
             manager.popBackStack();
         } else {
@@ -154,6 +179,20 @@ public class MainActivity extends BaseActivity implements
         progress.setCancelable(false);
         progress.setMessage("Downloading  data please wait...");
         progress.show();
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        recyclerView.setVisibility(View.GONE);
+        backArrowInvisible(true);
+        Character character = characterList.get(position);
+        CharacterProfileFragmnt characterFragment = CharacterProfileFragmnt.newInstance(character);
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        transaction.add(R.id.frames, characterFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 }
 

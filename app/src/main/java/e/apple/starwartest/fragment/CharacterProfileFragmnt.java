@@ -20,10 +20,10 @@ public class CharacterProfileFragmnt extends Fragment {
     Character character;
     private OnFragmentInteractionListener mListener;
 
-    public CharacterProfileFragmnt() {
+    public CharacterProfileFragmnt()
+    {
         // Required empty public constructor
     }
-
     public static CharacterProfileFragmnt newInstance(Character character) {
         CharacterProfileFragmnt fragment = new CharacterProfileFragmnt();
         Bundle args = new Bundle();
