@@ -4,30 +4,20 @@ import e.apple.starwartest.model.Responce;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import com.google.gson.Gson;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
 
-public class ApiService {
+public class ApiService implements APIInterface {
 
-    public static String url = "https://swapi.co/api/";
-    public static APIInterface apiInterface = null;
-
-    public static APIInterface getAPIInterfaceServeice() {
-        if (apiInterface == null) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(url)
+    public static String  URL = "https://swapi.co/api/";
+    APIInterface apiInterface;
+    public ApiService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                 .baseUrl(URL)
                     .addConverterFactory(GsonConverterFactory.create(new Gson())).build();
             apiInterface = retrofit.create(APIInterface.class);
-        }
-        return apiInterface;
+        this.apiInterface = retrofit.create(APIInterface.class);
     }
-
-    public interface APIInterface {
-        @GET("people")
-        Call<Responce> getCharacterList();
+    @Override
+    public retrofit2.Call<Responce> getCharacterList(){
+        return apiInterface.getCharacterList();
     }
 }

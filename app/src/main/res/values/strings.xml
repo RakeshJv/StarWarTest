@@ -12,6 +12,4 @@
     <string name="tryAgain">Try Again</string>
     <string name="alertTitle">Alert</string>
     <string name="alertMsg">Problem in downloading data </string>
-
-
 </resources>

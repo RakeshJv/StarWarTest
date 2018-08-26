@@ -1,7 +1,6 @@
 package e.apple.starwartest.activity;
 
 import android.app.ProgressDialog;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -23,31 +22,35 @@ import e.apple.starwartest.interfaces.ItemClickListener;
 import e.apple.starwartest.model.Character;
 import e.apple.starwartest.model.Responce;
 import e.apple.starwartest.network.ApiService;
+import e.apple.starwartest.presenter.CharacterListView;
+import e.apple.starwartest.presenter.IserverOperation;
+import e.apple.starwartest.presenter.ServerOperation;
 import retrofit2.Callback;
 
 public class MainActivity extends BaseActivity implements
-        ItemClickListener, DialogClickListner
-{
+        ItemClickListener, DialogClickListner, CharacterListView {
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private CustomDialog customDialog;
-    ProgressDialog progress;
+    private ProgressDialog progress;
     private CharacterListAdapter characterListAdapter;
     private RecyclerView recyclerView;
     private List<Character> characterList;
-
+    IserverOperation iServerOperation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        customDialog = new CustomDialog(this, this);
+        setTitle("Character Name");
         init();
-        getDataInRetrofit();
     }
 
     void init() {
+        customDialog = new CustomDialog(this, this);
+        iServerOperation = new ServerOperation(this);
+        iServerOperation.loadData();
         recyclerView = (RecyclerView) findViewById(R.id.characterList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -56,68 +59,17 @@ public class MainActivity extends BaseActivity implements
 
     void setDataInFragment(List<Character> list) {
         characterList = list;
-
         characterListAdapter = new CharacterListAdapter(list, R.layout.character_list);
         characterListAdapter.setClickListener(this);
         recyclerView.setAdapter(characterListAdapter);
 
     }
 
-//
-//    void setDataInFragment(List<Character> list) {
-//        CharacterFragment characterFragment = CharacterFragment.newInstance(list);
-//        transaction = manager.beginTransaction();
-//        transaction.add(R.id.frames, characterFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
-
-    public void getDataInRetrofit() {
-        showProgressBar();
-        retrofit2.Call<Responce> call = ApiService.getAPIInterfaceServeice().getCharacterList();
-        call.enqueue(new Callback<Responce>() {
-            @Override
-            public void onResponse(retrofit2.Call<Responce> call, retrofit2.Response<Responce> response) {
-                if (response.isSuccessful())
-                    try {
-                        Responce severResponce = response.body();
-                        Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show();
-                        Log.d("", "Success--->" + severResponce.getResults().size());
-                        progress.dismiss();
-                        characterList = severResponce.getResults();
-                        if (characterList.isEmpty()) {
-                            Toast.makeText(MainActivity.this, "Data Not Available", Toast.LENGTH_LONG).show();
-
-                        } else {
-                            setDataInFragment(characterList);
-
-                        }
-                    } catch (
-                            Exception e) {
-                        e.printStackTrace();
-                        progress.dismiss();
-                        customDialog.show();
-                        Log.d("", "Exception --> " + e.getMessage());
-                    }
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<Responce> call, Throwable t) {
-                //    Toast.makeText(MainActivity.this, "Exception-" + t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.d("TAG", "Exception-->" + t.getMessage());
-                progress.dismiss();
-                customDialog.show();
-
-            }
-        });
-    }
-
     @Override
     public void onButtonClick(String clickType) {
         if (clickType.equalsIgnoreCase(Constant.YES)) {
-
+            iServerOperation.loadData();
             customDialog.dismiss();
-            getDataInRetrofit();
 
         } else {
 
@@ -126,8 +78,6 @@ public class MainActivity extends BaseActivity implements
         }
 
     }
-
-
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -144,6 +94,7 @@ public class MainActivity extends BaseActivity implements
             Log.i("MainActivity", "popping backstack");
             recyclerView.setVisibility(View.VISIBLE);
             backArrowInvisible(false);
+            setTitle("Character Name");
             manager.popBackStack();
         } else {
             Log.i("MainActivity", "nothing on backstack, calling super");
@@ -156,6 +107,36 @@ public class MainActivity extends BaseActivity implements
         getSupportActionBar().setDisplayShowHomeEnabled(flag);
     }
 
+
+    @Override
+    public void hideProgressBar() {
+        progress.dismiss();
+    }
+
+    @Override
+    public void setError(Exception e) {
+        customDialog.show();
+    }
+
+    @Override
+    public void setThrowableError(Throwable t) {
+        customDialog.show();
+    }
+
+    @Override
+    public void loadData(Responce responce) {
+        characterList = responce.getResults();
+        if (characterList.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Data Not Available", Toast.LENGTH_LONG).show();
+
+        } else {
+            setDataInFragment(characterList);
+
+        }
+
+    }
+
+    @Override
     public void showProgressBar() {
         progress = new ProgressDialog(this);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -165,10 +146,12 @@ public class MainActivity extends BaseActivity implements
         progress.show();
     }
 
+
     @Override
     public void onClick(View view, int position) {
         recyclerView.setVisibility(View.GONE);
         backArrowInvisible(true);
+        setTitle("Character Detail");
         Character character = characterList.get(position);
         CharacterProfileFragmnt characterFragment = CharacterProfileFragmnt.newInstance(character);
         manager = getSupportFragmentManager();
