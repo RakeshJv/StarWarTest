@@ -26,7 +26,8 @@ import e.apple.starwartest.network.ApiService;
 import retrofit2.Callback;
 
 public class MainActivity extends BaseActivity implements
-        ItemClickListener, DialogClickListner, CharacterProfileFragmnt.OnFragmentInteractionListener {
+        ItemClickListener, DialogClickListner
+{
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
@@ -84,8 +85,7 @@ public class MainActivity extends BaseActivity implements
                         Log.d("", "Success--->" + severResponce.getResults().size());
                         progress.dismiss();
                         characterList = severResponce.getResults();
-                        if (characterList.isEmpty())
-                        {
+                        if (characterList.isEmpty()) {
                             Toast.makeText(MainActivity.this, "Data Not Available", Toast.LENGTH_LONG).show();
 
                         } else {
@@ -127,22 +127,6 @@ public class MainActivity extends BaseActivity implements
 
     }
 
-//
-//    @Override
-//    public void onFragmentInteraction(Character character) {
-//        backArrowInvisible(true);
-//        CharacterProfileFragmnt characterFragment = CharacterProfileFragmnt.newInstance(character);
-//        manager = getSupportFragmentManager();
-//        transaction = manager.beginTransaction();
-//        transaction.add(R.id.frames, characterFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
 
     @Override

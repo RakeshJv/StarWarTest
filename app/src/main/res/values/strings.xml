@@ -2,15 +2,14 @@
     <string name="app_name">Star Wars</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="char_name_label">Name </string>
-    <string name="char_height_label">Height  </string>
-    <string name="char_mass_label">Mass  </string>
-    <string name="char_creation_date">Creation Date  </string>
-    <string name="char_creation_time">Create Time  </string>
+    <string name="char_name_label">Name</string>
+    <string name="char_height_label">Height (mtr.)</string>
+    <string name="char_mass_label">Mass (Kg.)</string>
+    <string name="char_creation_date">Creation Date</string>
+    <string name="char_creation_time">Creation Time</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="tryAgain">Try Again</string>
-
     <string name="alertTitle">Alert</string>
     <string name="alertMsg">Problem in downloading data </string>
 

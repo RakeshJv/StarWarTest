@@ -12,23 +12,20 @@ import android.widget.TextView;
 
 import e.apple.starwartest.R;
 import e.apple.starwartest.model.Character;
+import e.apple.starwartest.util.DateTimeUtil;
 
 public class CharacterProfileFragmnt extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     TextView name, height, mass, creationDate, creationTime;
     Character character;
-    private OnFragmentInteractionListener mListener;
 
-    public CharacterProfileFragmnt()
-    {
-        // Required empty public constructor
+    public CharacterProfileFragmnt() {
+
     }
+
     public static CharacterProfileFragmnt newInstance(Character character) {
         CharacterProfileFragmnt fragment = new CharacterProfileFragmnt();
         Bundle args = new Bundle();
-        args.putSerializable("Character", character);
-
+        args.putSerializable("character", character);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,8 +34,7 @@ public class CharacterProfileFragmnt extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            character = (Character) getArguments().getSerializable("Character");
-
+            character = (Character) getArguments().getSerializable("character");
         }
     }
 
@@ -62,46 +58,29 @@ public class CharacterProfileFragmnt extends Fragment {
         name.setText(character.getName());
         height.setText(character.getHeight());
         mass.setText(character.getMass());
-        creationDate.setText(character.getCreated());
-        creationTime.setText(character.getCreated());
-    }
+        String dateTime = DateTimeUtil.convertToNewFormat(character.getCreated());
+        if (dateTime == null || dateTime.equals("") || dateTime.length() == 0) {
+            creationDate.setText("Creation data not recorded");
+            creationTime.setText("Creation data not recorded");
+        } else {
+            String dataNtime[] = dateTime.split(" ");
+            creationDate.setText(dataNtime[0]);
+            creationTime.setText(dataNtime[1] +" "+dataNtime[2]);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
         }
     }
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
 }
