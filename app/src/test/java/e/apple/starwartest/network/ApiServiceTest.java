@@ -152,16 +152,6 @@ public class ApiServiceTest {
         when(apiService.getCharacterList()).thenReturn(responce);
         ServerOperation serverOperation = new ServerOperation(view);
         serverOperation.loadData();
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        when(apiService.getCharacterList()).thenReturn(responce);
-        serverOperation = new ServerOperation(view);
-        serverOperation.loadData();
         verify(view).setError(exception);
         assertTrue(mainActivity.getCustomDialog().isShowing() == true);
 
