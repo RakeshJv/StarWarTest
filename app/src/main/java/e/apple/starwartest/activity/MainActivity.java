@@ -32,11 +32,6 @@ public class MainActivity extends BaseActivity implements
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
-
-    public CustomDialog getCustomDialog() {
-        return customDialog;
-    }
-
     private CustomDialog customDialog;
     private ProgressDialog progress;
     private CharacterListAdapter characterListAdapter;
@@ -59,6 +54,8 @@ public class MainActivity extends BaseActivity implements
         recyclerView = (RecyclerView) findViewById(R.id.characterList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
+
+
     }
 
 
@@ -164,7 +161,10 @@ public class MainActivity extends BaseActivity implements
         transaction.add(R.id.frames, characterFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
 
+    public CustomDialog getCustomDialog() {
+        return customDialog;
     }
 }
 
