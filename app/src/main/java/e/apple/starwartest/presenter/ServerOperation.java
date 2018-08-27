@@ -27,7 +27,7 @@ public class ServerOperation implements IserverOperation {
                 if (response.isSuccessful())
                     try {
                         Responce severResponce = response.body();
-                        Log.d("", "Success--->" + severResponce.getResults().size());
+                        //Log.d("", "Success--->" + severResponce.getResults().size());
 
                         characterListView.loadData(severResponce);
                         characterListView.hideProgressBar();

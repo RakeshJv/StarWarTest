@@ -32,6 +32,11 @@ public class MainActivity extends BaseActivity implements
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
+
+    public CustomDialog getCustomDialog() {
+        return customDialog;
+    }
+
     private CustomDialog customDialog;
     private ProgressDialog progress;
     private CharacterListAdapter characterListAdapter;
